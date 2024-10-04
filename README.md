@@ -8,10 +8,9 @@
 
 [Further Work](#work)
 <a name="introduction"/>
-hello
 # Introduction
 
-This repo presents code for Deep Learning based algorithm for
+hello,This repo presents code for Deep Learning based algorithm for
 **detecting violence** in indoor or outdoor environments. The algorithm can
 detect following scenarios with high accuracy: fight, fire, car crash and even
 more.
