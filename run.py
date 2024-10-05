@@ -10,7 +10,7 @@ from model import Model
 logging.basicConfig(filename='detection_log.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Settings for violence detection alert
-# adjust threshikd and time window as per batch size
+# adjust threshold and time window as per batch size
 DETECTION_THRESHOLD = 3  # Number of detections
 TIME_WINDOW = 6  # Time window in seconds
 ALERT_COOLDOWN = 10  # Cooldown period in seconds before another alert is allowed
