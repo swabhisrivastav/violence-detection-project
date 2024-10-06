@@ -1,0 +1,47 @@
+2024-10-06 13:43:31,188 - 2024-10-06 13:43:31 - Detected label: person walking in office
+2024-10-06 13:43:31,920 - 2024-10-06 13:43:31 - Detected label: person walking in office
+2024-10-06 13:43:32,655 - 2024-10-06 13:43:32 - Detected label: person walking in office
+2024-10-06 13:43:33,378 - 2024-10-06 13:43:33 - Detected label: person walking in office
+2024-10-06 13:43:34,106 - 2024-10-06 13:43:34 - Detected label: person walking in office
+2024-10-06 13:43:34,832 - 2024-10-06 13:43:34 - Detected label: office corridor
+2024-10-06 13:43:35,562 - 2024-10-06 13:43:35 - Detected label: office corridor
+2024-10-06 13:43:36,334 - 2024-10-06 13:43:36 - Detected label: office corridor
+2024-10-06 13:43:37,144 - 2024-10-06 13:43:37 - Detected label: office corridor
+2024-10-06 13:43:37,888 - 2024-10-06 13:43:37 - Detected label: office corridor
+2024-10-06 13:43:38,670 - 2024-10-06 13:43:38 - Detected label: person walking in office
+2024-10-06 13:43:39,391 - 2024-10-06 13:43:39 - Detected label: person walking in office
+2024-10-06 13:43:40,146 - 2024-10-06 13:43:40 - Detected label: person walking in office
+2024-10-06 13:43:40,863 - 2024-10-06 13:43:40 - Detected label: office corridor
+2024-10-06 13:43:41,584 - 2024-10-06 13:43:41 - Detected label: person walking in office
+2024-10-06 13:43:42,363 - 2024-10-06 13:43:42 - Detected label: person walking in office
+2024-10-06 13:43:43,123 - 2024-10-06 13:43:43 - Detected label: person walking in office
+2024-10-06 13:43:43,850 - 2024-10-06 13:43:43 - Detected label: person walking in office
+2024-10-06 13:43:44,596 - 2024-10-06 13:43:44 - Detected label: person walking in office
+2024-10-06 13:43:45,345 - 2024-10-06 13:43:45 - Detected label: person walking in office
+2024-10-06 13:43:46,127 - 2024-10-06 13:43:46 - Detected label: person walking in office
+2024-10-06 13:43:46,864 - 2024-10-06 13:43:46 - Detected label: person walking in office
+2024-10-06 13:43:47,607 - 2024-10-06 13:43:47 - Detected label: person walking in office
+2024-10-06 13:43:48,371 - 2024-10-06 13:43:48 - Detected label: person walking in office
+2024-10-06 13:43:49,185 - 2024-10-06 13:43:49 - Detected label: violence in office
+2024-10-06 13:43:49,922 - 2024-10-06 13:43:49 - Detected label: person walking in office
+2024-10-06 13:43:50,699 - 2024-10-06 13:43:50 - Detected label: person walking in office
+2024-10-06 13:43:51,459 - 2024-10-06 13:43:51 - Detected label: person walking in office
+2024-10-06 13:43:52,170 - 2024-10-06 13:43:52 - Detected label: person walking in office
+2024-10-06 13:43:52,171 - Alert: Violence detected!
+2024-10-06 13:43:52,914 - 2024-10-06 13:43:52 - Detected label: person walking in office
+2024-10-06 13:43:53,637 - 2024-10-06 13:43:53 - Detected label: person walking in office
+2024-10-06 13:43:54,395 - 2024-10-06 13:43:54 - Detected label: person walking in office
+2024-10-06 13:43:55,134 - 2024-10-06 13:43:55 - Detected label: person walking in office
+2024-10-06 13:43:55,919 - 2024-10-06 13:43:55 - Detected label: violence in office
+2024-10-06 13:43:56,651 - 2024-10-06 13:43:56 - Detected label: violence in office
+2024-10-06 13:43:57,359 - 2024-10-06 13:43:57 - Detected label: violence in office
+2024-10-06 13:43:58,095 - 2024-10-06 13:43:58 - Detected label: violence in office
+2024-10-06 13:43:58,848 - 2024-10-06 13:43:58 - Detected label: violence in office
+2024-10-06 13:43:59,595 - 2024-10-06 13:43:59 - Detected label: violence in office
+2024-10-06 13:44:00,376 - 2024-10-06 13:44:00 - Detected label: violence in office
+2024-10-06 13:44:01,091 - 2024-10-06 13:44:01 - Detected label: violence in office
+2024-10-06 13:44:01,824 - 2024-10-06 13:44:01 - Detected label: violence in office
+2024-10-06 13:44:02,581 - 2024-10-06 13:44:02 - Detected label: violence in office
+2024-10-06 13:44:02,582 - Alert: Violence detected!
+2024-10-06 13:44:03,346 - 2024-10-06 13:44:03 - Detected label: violence in office
+2024-10-06 13:44:04,080 - 2024-10-06 13:44:04 - Detected label: violence in office
