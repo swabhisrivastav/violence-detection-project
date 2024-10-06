@@ -32,6 +32,8 @@ First install requirements:
 
 To test the model you can either run:
 `python run.py --input-path ./data/7.jpg`
+`python run.py --input-path ./data/office_fight.mp4`
+
 
 Or you can test it through web app:
 `streamlit run app.py`
