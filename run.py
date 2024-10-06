@@ -5,18 +5,24 @@ from datetime import datetime
 import time
 from collections import deque
 from model import Model
+import os  
 
-# Configure logging
-logging.basicConfig(filename='detection_log.txt', level=logging.INFO, format='%(asctime)s - %(message)s')
+# Log file name
+log_filename = 'detection_log.txt'
+
+# If the log file already exists, delete it
+if os.path.exists(log_filename):
+    os.remove(log_filename)
+
+# Configure logging with the same filename (it will create a new one)
+logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s - %(message)s')
 
 # Settings for violence detection alert
 # adjust threshold and time window as per batch size
-DETECTION_THRESHOLD = 3  # Number of detections
-TIME_WINDOW = 6  # Time window in seconds
+DETECTION_THRESHOLD = 50  # Number of detections
+TIME_WINDOW = 3  # Time window in seconds
 ALERT_COOLDOWN = 10  # Cooldown period in seconds before another alert is allowed
-BATCH_SIZE = 10  # Number of frames to process in a batch 
-# adjust batch size as needed
-DISPLAY_DURATION = 30  # Duration in frames to keep showing the label
+BATCH_SIZE = 9  # Number of frames to process in a batch 
 
 def argument_parser():
     parser = argparse.ArgumentParser(description="Violence detection in images, videos, and webcam feed")
@@ -30,7 +36,6 @@ def log_label(label):
     logging.info(f'{timestamp} - Detected label: {label}')
 
 def check_for_alert(detection_times, last_alert_time):
-    """Check if violence was detected 6 times in the last 3 seconds and apply cooldown for alerts."""
     current_time = time.time()
     
     # Remove timestamps older than TIME_WINDOW seconds from the buffer
@@ -47,6 +52,8 @@ def check_for_alert(detection_times, last_alert_time):
     
     return last_alert_time
 
+#IMAGE PROCESSING
+
 def process_image(model, image_path):
     image = cv2.imread(image_path)
     if image is None:
@@ -58,6 +65,8 @@ def process_image(model, image_path):
     cv2.imshow('Violence Detection', image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+#VIDEO PROCESSING
 
 def process_video(model, video_path):
     video = cv2.VideoCapture(video_path)
@@ -71,7 +80,6 @@ def process_video(model, video_path):
     frame_batch = []  # Batch of frames
 
     label_to_display = ""  # This will store the current label to display
-    display_counter = 0  # Counter for how long the label stays visible
 
     while True:
         ret, frame = video.read()
@@ -89,14 +97,12 @@ def process_video(model, video_path):
                 label = label_dict['label']
                 
                 # If a new label is detected, reset the display counter
-                if label != label_to_display:
+                if label != label_to_display and 'violence'in label:
                     label_to_display = label
-                    display_counter = DISPLAY_DURATION  # Reset display duration
 
-                # Log the label every 200 ms
                 current_time = time.time()
-                if current_time - last_log_time >= 0.2:  # 200 ms
-                    log_label(label_to_display)
+                if current_time - last_log_time >= 0.5:  
+                    log_label(label)
                     last_log_time = current_time
                 
                 # If violence is detected (partial match), store the current timestamp
@@ -110,11 +116,8 @@ def process_video(model, video_path):
             # Reset batch
             frame_batch = []
 
-        # Show the last label for the duration set by display_counter
-        if display_counter > 0:
-            # Add label text on the frame (update frames)
-            cv2.putText(frame, f'Label: {label_to_display}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-            display_counter -= 1  # Decrease display counter
+
+        cv2.putText(frame, f'{label_to_display}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
         
         # Show the frame in the same window
         cv2.imshow('Violence Detection', frame)
@@ -126,6 +129,8 @@ def process_video(model, video_path):
     # Release the video capture and close windows
     video.release()
     cv2.destroyAllWindows()
+
+#REAL_TIME PROCESSING
 
 def process_webcam(model):
     video = cv2.VideoCapture(0)  # Capture from the default webcam
@@ -139,7 +144,6 @@ def process_webcam(model):
     frame_batch = []  # Batch of frames
 
     label_to_display = ""  # This will store the current label to display
-    display_counter = 0  # Counter for how long the label stays visible
 
     while True:
         ret, frame = video.read()
@@ -158,18 +162,17 @@ def process_webcam(model):
                 label = label_dict['label']
 
                 # If a new label is detected, reset the display counter
-                if label != label_to_display:
+                if label != label_to_display and 'violence'in label:
                     label_to_display = label
-                    display_counter = DISPLAY_DURATION  # Reset display duration
                 
-                # Log the label every 200 ms
+                # Log the label every 1 s
                 current_time = time.time()
-                if current_time - last_log_time >= 0.2:  # 200 ms
-                    log_label(label_to_display)
+                if current_time - last_log_time >= .5: 
+                    log_label(label)
                     last_log_time = current_time
 
-                # If violence is detected (partial match), store the current timestamp
-                if 'violence' in label_to_display.lower():
+                # If violence is detected (partial match), store the current timestamp 
+                if 'violence' in label_to_display.lower() :
                     detection_times.append(time.time())
                     last_alert_time = check_for_alert(detection_times, last_alert_time)
                 else:
@@ -179,11 +182,8 @@ def process_webcam(model):
             # Reset batch
             frame_batch = []
 
-        # Show the last label for the duration set by display_counter
-        if display_counter > 0:
-            # Add label text on the frame (update frames)
-            cv2.putText(frame, f'Label: {label_to_display}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-            display_counter -= 1  # Decrease display counter
+
+        cv2.putText(frame, f'Label: {label_to_display}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
 
         # Show the frame in the same window
         cv2.imshow('Violence Detection', frame)
