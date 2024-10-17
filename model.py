@@ -212,6 +212,4 @@ if __name__ == "__main__":
     # Process video or webcam feed in batches
     process_video_batch(model, video_source=0, batch_size=4)
 
-    # Example for single image processing
-    # Uncomment the line below and provide the correct image path to test
-    # process_image(model, 'path_to_your_image.jpg')
+   
