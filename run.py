@@ -172,7 +172,7 @@ def process_webcam(model):
                 
                 # Log the label every 1 s
                 current_time = time.time()
-                if current_time - last_log_time >= .5: 
+                if current_time - last_log_time >= 0.5: 
                     log_label(label)
                     last_log_time = current_time
 
