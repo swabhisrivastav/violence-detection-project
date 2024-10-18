@@ -123,22 +123,23 @@ def process_video(model, video_path):
             for label_dict in labels:
                 label = label_dict['label']
                 
-                # If a new label is detected, reset the display counter
-                if label != label_to_display and 'violence'in label:
-                    label_to_display = label
-
-                current_time = time.time()
-                if current_time - last_log_time >= 0.5:  
-                    log_label(label)
-                    last_log_time = current_time
                 
+
                 # If violence is detected (partial match), store the current timestamp
                 if 'violence' in label_to_display.lower():
+                    label_to_display = label
                     detection_times.append(time.time())
                     last_alert_time = check_for_alert(detection_times, last_alert_time)
                 else:
                     # Reset detection buffer if no violence detected in current frame
+                    label_to_display=' '
                     detection_times.clear()
+
+                                # If a new label is detected, reset the display counter
+                current_time = time.time()
+                if current_time - last_log_time >= 0.5:  
+                    log_label(label)
+                    last_log_time = current_time
 
             # Reset batch
             frame_batch = []
@@ -182,37 +183,30 @@ def process_webcam(model):
             print("Error: Could not read frame from webcam.")
             break
 
-        # Check for motion before processing the frame
-        if motion_detected(prev_frame, frame):
-            frame_batch.append(frame)
-
-            if len(frame_batch) == BATCH_SIZE:
-                labels = model.predict_batch(frame_batch)
-
-                for label_dict in labels:
-                    label = label_dict['label']
-
-                    if label != label_to_display and 'violence' in label:
-                        label_to_display = label
-
-                    current_time = time.time()
-                    if current_time - last_log_time >= 0.5: 
-                        log_label(label)
-                        last_log_time = current_time
-
-                    if 'violence' in label_to_display.lower():
-                        detection_times.append(time.time())
-                        last_alert_time = check_for_alert(detection_times, last_alert_time)
-                    else:
-                        detection_times.clear()
-
-                frame_batch = []  # Reset batch
-
-            cv2.putText(frame, f'Label: {label_to_display}', (10, 30), 
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
-
+        
+        frame_batch.append(frame)
+        if len(frame_batch) == BATCH_SIZE:
+            labels = model.predict_batch(frame_batch)
+            for label_dict in labels:
+                label = label_dict['label']
+                if 'violence' in label.lower():
+                    label_to_display = label
+                    detection_times.append(time.time())
+                    last_alert_time = check_for_alert(detection_times, last_alert_time)
+                else:
+                # If no violence, reset label_to_display and detection buffer
+                    label_to_display = " "
+                    detection_times.clear()
+                current_time = time.time()
+                if current_time - last_log_time >= 0.5: 
+                    log_label(label)
+                    last_log_time = current_time
+               
+            frame_batch = []  # Reset batch
+        cv2.putText(frame, f'Label: {label_to_display}', (10, 30), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
         # Update previous frame for the next iteration
-        prev_frame = frame
+        
 
         # Show the frame
         cv2.imshow('Violence Detection', frame)
