@@ -28,6 +28,28 @@ DETECTION_THRESHOLD = 40  # Number of detections
 TIME_WINDOW = 3  # Time window in seconds
 ALERT_COOLDOWN = 10  # Cooldown period in seconds before another alert is allowed
 BATCH_SIZE = 9  # Number of frames to process in a batch 
+MOTION_THRESHOLD = 500 
+
+def motion_detected(prev_frame, current_frame):
+    """Detect if there is significant motion between two frames."""
+    gray1 = cv2.cvtColor(prev_frame, cv2.COLOR_BGR2GRAY)
+    gray2 = cv2.cvtColor(current_frame, cv2.COLOR_BGR2GRAY)
+
+    # Apply Gaussian blur to reduce noise
+    gray1 = cv2.GaussianBlur(gray1, (21, 21), 0)
+    gray2 = cv2.GaussianBlur(gray2, (21, 21), 0)
+
+    # Compute the absolute difference between the two frames
+    frame_delta = cv2.absdiff(gray1, gray2)
+
+    # Apply threshold to highlight significant changes
+    thresh = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)[1]
+    thresh = cv2.dilate(thresh, None, iterations=2)
+
+    # Count non-zero pixels (areas of change)
+    motion_score = cv2.countNonZero(thresh)
+
+    return motion_score > MOTION_THRESHOLD  # True if significant motion detected
 
 def argument_parser():
     parser = argparse.ArgumentParser(description="Violence detection in images, videos, and webcam feed")
@@ -136,68 +158,68 @@ def process_video(model, video_path):
     cv2.destroyAllWindows()
 
 #REAL_TIME PROCESSING
-
 def process_webcam(model):
-    video = cv2.VideoCapture(0)  # Capture from the default webcam
+    video = cv2.VideoCapture(0)
     if not video.isOpened():
         print("Error: Could not access webcam.")
         return
 
     last_log_time = time.time()
-    detection_times = deque()  # Buffer to store violence detection timestamps
-    last_alert_time = 0  # Store the time of the last alert
-    frame_batch = []  # Batch of frames
-
-    label_to_display = ""  # This will store the current label to display
+    detection_times = deque()
+    last_alert_time = 0
+    frame_batch = []
+    label_to_display = ""
+    
+    # Initialize previous frame for motion detection
+    ret, prev_frame = video.read()
+    if not ret:
+        print("Error: Could not read frame from webcam.")
+        return
 
     while True:
         ret, frame = video.read()
         if not ret:
             print("Error: Could not read frame from webcam.")
             break
-        
-        # Add frame to batch
-        frame_batch.append(frame)
-        
-        # If batch is full, process it
-        if len(frame_batch) == BATCH_SIZE:
-            labels = model.predict_batch(frame_batch)
 
-            for label_dict in labels:
-                label = label_dict['label']
+        # Check for motion before processing the frame
+        if motion_detected(prev_frame, frame):
+            frame_batch.append(frame)
 
-                # If a new label is detected, reset the display counter
-                if label != label_to_display and 'violence'in label:
-                    label_to_display = label
-                
-                # Log the label every 1 s
-                current_time = time.time()
-                if current_time - last_log_time >= 0.5: 
-                    log_label(label)
-                    last_log_time = current_time
+            if len(frame_batch) == BATCH_SIZE:
+                labels = model.predict_batch(frame_batch)
 
-                # If violence is detected (partial match), store the current timestamp 
-                if 'violence' in label_to_display.lower() :
-                    detection_times.append(time.time())
-                    last_alert_time = check_for_alert(detection_times, last_alert_time)
-                else:
-                    # Reset detection buffer if no violence detected in current frame
-                    detection_times.clear()
+                for label_dict in labels:
+                    label = label_dict['label']
 
-            # Reset batch
-            frame_batch = []
+                    if label != label_to_display and 'violence' in label:
+                        label_to_display = label
 
+                    current_time = time.time()
+                    if current_time - last_log_time >= 0.5: 
+                        log_label(label)
+                        last_log_time = current_time
 
-        cv2.putText(frame, f'Label: {label_to_display}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+                    if 'violence' in label_to_display.lower():
+                        detection_times.append(time.time())
+                        last_alert_time = check_for_alert(detection_times, last_alert_time)
+                    else:
+                        detection_times.clear()
 
-        # Show the frame in the same window
+                frame_batch = []  # Reset batch
+
+            cv2.putText(frame, f'Label: {label_to_display}', (10, 30), 
+                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2, cv2.LINE_AA)
+
+        # Update previous frame for the next iteration
+        prev_frame = frame
+
+        # Show the frame
         cv2.imshow('Violence Detection', frame)
-        
-        # Press 'q' to quit
+
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    # Release the webcam and close windows
     video.release()
     cv2.destroyAllWindows()
 

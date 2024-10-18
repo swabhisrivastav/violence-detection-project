@@ -22,7 +22,7 @@ label-settings:
     - 'fire in office'
     - 'people talking'
     - 'people walking in office'
-    - 'person walking in office'
+    - 'person sitting in office'
     - 'person sitting'
     - 'group of people'
   default-label: 'Unknown' # value to return if model's confidence is less than "prediction-threshold"
