@@ -122,24 +122,18 @@ def process_video(model, video_path):
             
             for label_dict in labels:
                 label = label_dict['label']
-                
-                
-
-                # If violence is detected (partial match), store the current timestamp
-                if 'violence' in label_to_display.lower():
+                if 'violence' in label.lower():
                     label_to_display = label
                     detection_times.append(time.time())
                     last_alert_time = check_for_alert(detection_times, last_alert_time)
                 else:
                     # Reset detection buffer if no violence detected in current frame
-                    label_to_display=' '
+                    label_to_display = " "
                     detection_times.clear()
-
-                                # If a new label is detected, reset the display counter
                 current_time = time.time()
                 if current_time - last_log_time >= 0.5:  
                     log_label(label)
-                    last_log_time = current_time
+                    last_log_time = current_time                                          
 
             # Reset batch
             frame_batch = []

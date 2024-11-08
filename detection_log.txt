@@ -1,68 +1,38 @@
-2024-10-18 11:27:37,800 - 2024-10-18 11:27:37 - Detected label: person sitting in office
-2024-10-18 11:27:38,634 - 2024-10-18 11:27:38 - Detected label: person sitting in office
-2024-10-18 11:27:39,448 - 2024-10-18 11:27:39 - Detected label: person sitting in office
-2024-10-18 11:27:40,273 - 2024-10-18 11:27:40 - Detected label: person sitting in office
-2024-10-18 11:27:41,158 - 2024-10-18 11:27:41 - Detected label: person sitting in office
-2024-10-18 11:27:42,064 - 2024-10-18 11:27:42 - Detected label: person sitting in office
-2024-10-18 11:27:42,939 - 2024-10-18 11:27:42 - Detected label: person sitting in office
-2024-10-18 11:27:43,849 - 2024-10-18 11:27:43 - Detected label: person sitting in office
-2024-10-18 11:27:44,738 - 2024-10-18 11:27:44 - Detected label: person sitting in office
-2024-10-18 11:27:45,560 - 2024-10-18 11:27:45 - Detected label: person sitting in office
-2024-10-18 11:27:46,437 - 2024-10-18 11:27:46 - Detected label: person sitting in office
-2024-10-18 11:27:47,319 - 2024-10-18 11:27:47 - Detected label: person sitting in office
-2024-10-18 11:27:48,133 - 2024-10-18 11:27:48 - Detected label: person sitting in office
-2024-10-18 11:27:48,935 - 2024-10-18 11:27:48 - Detected label: person sitting in office
-2024-10-18 11:27:49,745 - 2024-10-18 11:27:49 - Detected label: person sitting in office
-2024-10-18 11:27:50,641 - 2024-10-18 11:27:50 - Detected label: person standing
-2024-10-18 11:27:51,415 - 2024-10-18 11:27:51 - Detected label: person standing
-2024-10-18 11:27:52,268 - 2024-10-18 11:27:52 - Detected label: person sitting in office
-2024-10-18 11:27:53,113 - 2024-10-18 11:27:53 - Detected label: person sitting in office
-2024-10-18 11:27:53,925 - 2024-10-18 11:27:53 - Detected label: person sitting in office
-2024-10-18 11:27:54,724 - 2024-10-18 11:27:54 - Detected label: person sitting in office
-2024-10-18 11:27:55,647 - 2024-10-18 11:27:55 - Detected label: person sitting in office
-2024-10-18 11:27:56,541 - 2024-10-18 11:27:56 - Detected label: violence in office
-2024-10-18 11:27:57,347 - 2024-10-18 11:27:57 - Detected label: violence in office
-2024-10-18 11:27:58,275 - 2024-10-18 11:27:58 - Detected label: people talking in office
-2024-10-18 11:27:59,136 - 2024-10-18 11:27:59 - Detected label: people sitting in office
-2024-10-18 11:27:59,919 - 2024-10-18 11:27:59 - Detected label: people talking in office
-2024-10-18 11:28:00,725 - 2024-10-18 11:28:00 - Detected label: people standing in office
-2024-10-18 11:28:01,537 - 2024-10-18 11:28:01 - Detected label: people talking in office
-2024-10-18 11:28:02,339 - 2024-10-18 11:28:02 - Detected label: people talking in office
-2024-10-18 11:28:03,230 - 2024-10-18 11:28:03 - Detected label: people talking in office
-2024-10-18 11:28:04,031 - 2024-10-18 11:28:04 - Detected label: people talking in office
-2024-10-18 11:28:04,839 - 2024-10-18 11:28:04 - Detected label: people talking in office
-2024-10-18 11:28:05,639 - 2024-10-18 11:28:05 - Detected label: violence in office
-2024-10-18 11:28:06,467 - 2024-10-18 11:28:06 - Detected label: violence in office
-2024-10-18 11:28:07,358 - 2024-10-18 11:28:07 - Detected label: violence in office
-2024-10-18 11:28:08,221 - 2024-10-18 11:28:08 - Detected label: people sitting in office
-2024-10-18 11:28:09,023 - 2024-10-18 11:28:09 - Detected label: people talking in office
-2024-10-18 11:28:09,847 - 2024-10-18 11:28:09 - Detected label: people talking in office
-2024-10-18 11:28:10,756 - 2024-10-18 11:28:10 - Detected label: people talking in office
-2024-10-18 11:28:11,630 - 2024-10-18 11:28:11 - Detected label: people talking in office
-2024-10-18 11:28:12,444 - 2024-10-18 11:28:12 - Detected label: people talking in office
-2024-10-18 11:28:13,282 - 2024-10-18 11:28:13 - Detected label: person sitting in office
-2024-10-18 11:28:14,163 - 2024-10-18 11:28:14 - Detected label: people talking in office
-2024-10-18 11:28:15,044 - 2024-10-18 11:28:15 - Detected label: people sitting in office
-2024-10-18 11:28:15,842 - 2024-10-18 11:28:15 - Detected label: people sitting in office
-2024-10-18 11:28:16,650 - 2024-10-18 11:28:16 - Detected label: people talking in office
-2024-10-18 11:28:17,533 - 2024-10-18 11:28:17 - Detected label: people sitting in office
-2024-10-18 11:28:18,355 - 2024-10-18 11:28:18 - Detected label: people talking in office
-2024-10-18 11:28:19,152 - 2024-10-18 11:28:19 - Detected label: people sitting in office
-2024-10-18 11:28:19,946 - 2024-10-18 11:28:19 - Detected label: people sitting in office
-2024-10-18 11:28:20,727 - 2024-10-18 11:28:20 - Detected label: people talking in office
-2024-10-18 11:28:21,535 - 2024-10-18 11:28:21 - Detected label: people talking in office
-2024-10-18 11:28:22,308 - 2024-10-18 11:28:22 - Detected label: people talking in office
-2024-10-18 11:28:23,115 - 2024-10-18 11:28:23 - Detected label: people talking in office
-2024-10-18 11:28:23,929 - 2024-10-18 11:28:23 - Detected label: people sitting in office
-2024-10-18 11:28:24,750 - 2024-10-18 11:28:24 - Detected label: person sitting in office
-2024-10-18 11:28:25,567 - 2024-10-18 11:28:25 - Detected label: people talking in office
-2024-10-18 11:28:26,418 - 2024-10-18 11:28:26 - Detected label: people talking in office
-2024-10-18 11:28:27,271 - 2024-10-18 11:28:27 - Detected label: person sitting in office
-2024-10-18 11:28:28,131 - 2024-10-18 11:28:28 - Detected label: people talking in office
-2024-10-18 11:28:29,045 - 2024-10-18 11:28:29 - Detected label: people talking in office
-2024-10-18 11:28:29,816 - 2024-10-18 11:28:29 - Detected label: person sitting in office
-2024-10-18 11:28:30,622 - 2024-10-18 11:28:30 - Detected label: person sitting in office
-2024-10-18 11:28:31,460 - 2024-10-18 11:28:31 - Detected label: people talking in office
-2024-10-18 11:28:32,344 - 2024-10-18 11:28:32 - Detected label: people talking in office
-2024-10-18 11:28:33,136 - 2024-10-18 11:28:33 - Detected label: people sitting in office
-2024-10-18 11:28:33,914 - 2024-10-18 11:28:33 - Detected label: person sitting in office
+2024-10-25 18:11:16,252 - 2024-10-25 18:11:16 - Detected label: people walking in office
+2024-10-25 18:11:17,121 - 2024-10-25 18:11:17 - Detected label: office corridor
+2024-10-25 18:11:17,890 - 2024-10-25 18:11:17 - Detected label: office corridor
+2024-10-25 18:11:18,661 - 2024-10-25 18:11:18 - Detected label: office corridor
+2024-10-25 18:11:19,430 - 2024-10-25 18:11:19 - Detected label: office corridor
+2024-10-25 18:11:20,175 - 2024-10-25 18:11:20 - Detected label: office corridor
+2024-10-25 18:11:20,988 - 2024-10-25 18:11:20 - Detected label: office corridor
+2024-10-25 18:11:21,776 - 2024-10-25 18:11:21 - Detected label: office corridor
+2024-10-25 18:11:22,544 - 2024-10-25 18:11:22 - Detected label: office corridor
+2024-10-25 18:11:23,301 - 2024-10-25 18:11:23 - Detected label: office corridor
+2024-10-25 18:11:24,061 - 2024-10-25 18:11:24 - Detected label: office corridor
+2024-10-25 18:11:24,803 - 2024-10-25 18:11:24 - Detected label: office corridor
+2024-10-25 18:11:25,565 - 2024-10-25 18:11:25 - Detected label: office corridor
+2024-10-25 18:11:26,332 - 2024-10-25 18:11:26 - Detected label: office corridor
+2024-10-25 18:11:27,107 - 2024-10-25 18:11:27 - Detected label: office corridor
+2024-10-25 18:11:27,877 - 2024-10-25 18:11:27 - Detected label: office corridor
+2024-10-25 18:11:28,653 - 2024-10-25 18:11:28 - Detected label: office corridor
+2024-10-25 18:11:29,447 - 2024-10-25 18:11:29 - Detected label: people walking in office
+2024-10-25 18:11:30,223 - 2024-10-25 18:11:30 - Detected label: people walking in office
+2024-10-25 18:11:30,970 - 2024-10-25 18:11:30 - Detected label: person standing
+2024-10-25 18:11:31,772 - 2024-10-25 18:11:31 - Detected label: person standing
+2024-10-25 18:11:32,526 - 2024-10-25 18:11:32 - Detected label: person standing
+2024-10-25 18:11:33,306 - 2024-10-25 18:11:33 - Detected label: person standing
+2024-10-25 18:11:34,079 - 2024-10-25 18:11:34 - Detected label: violence in office
+2024-10-25 18:11:34,877 - 2024-10-25 18:11:34 - Detected label: violence in office
+2024-10-25 18:11:35,678 - 2024-10-25 18:11:35 - Detected label: violence in office
+2024-10-25 18:11:36,465 - 2024-10-25 18:11:36 - Detected label: violence in office
+2024-10-25 18:11:37,265 - 2024-10-25 18:11:37 - Detected label: violence in office
+2024-10-25 18:11:38,036 - 2024-10-25 18:11:38 - Detected label: violence in office
+2024-10-25 18:11:38,819 - 2024-10-25 18:11:38 - Detected label: violence in office
+2024-10-25 18:11:39,589 - 2024-10-25 18:11:39 - Detected label: violence in office
+2024-10-25 18:11:40,327 - 2024-10-25 18:11:40 - Detected label: violence in office
+2024-10-25 18:11:41,109 - 2024-10-25 18:11:41 - Detected label: violence in office
+2024-10-25 18:11:41,895 - 2024-10-25 18:11:41 - Detected label: violence in office
+2024-10-25 18:11:42,687 - 2024-10-25 18:11:42 - Detected label: violence in office
+2024-10-25 18:11:43,461 - 2024-10-25 18:11:43 - Detected label: violence in office
+2024-10-25 18:11:44,250 - 2024-10-25 18:11:44 - Detected label: violence in office
+2024-10-25 18:11:45,017 - 2024-10-25 18:11:45 - Detected label: violence in office
