@@ -12,7 +12,7 @@ from deep_sort import nn_matching
 from deep_sort.detection import Detection
 from deep_sort.tracker import Tracker
 from deep_sort import generate_detections as gdet
-from model import Model  # Importing the violence detection model
+from model import Model  
 
 # Initialize logging
 log_filename = 'detection_log.txt'
@@ -31,7 +31,6 @@ violence_logging.addHandler(violence_handler)
 
 # Function to log violence detection events
 def log_violence_detection(label_to_display):
-    """Log the violence detection with the current timestamp."""
     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     violence_logging.info(f'{timestamp} - Violence Detected: {label_to_display}')
 
@@ -128,6 +127,10 @@ def process_real_time():
     if not cap.isOpened():
         print("Error: Cannot access the webcam")
         return
+    
+    window_name = "Crowd and Violence Detection"
+    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL) 
+    cv2.resizeWindow(window_name, 1080, 720)  
 
     model = Model()  # Initialize violence detection model
     detection_times = deque()
@@ -229,5 +232,4 @@ if __name__ == "__main__":
     process_real_time()
     crowd_data_file.close()
 
-# Run the integrated program
 

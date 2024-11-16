@@ -6,7 +6,6 @@ import torch
 import yaml
 from PIL import Image
 
-
 class Model:
     def __init__(self, settings_path: str = './settings.yaml'):
         with open(settings_path, "r") as file:
@@ -15,8 +14,7 @@ class Model:
         self.device = self.settings['model-settings']['device']
         self.model_name = self.settings['model-settings']['model-name']
         self.threshold = self.settings['model-settings']['prediction-threshold']
-        self.model, self.preprocess = clip.load(self.model_name,
-                                                device=self.device)
+        self.model, self.preprocess = clip.load(self.model_name, device=self.device)
         self.labels = self.settings['label-settings']['labels']
         self.labels_ = []
         for label in self.labels:
@@ -28,15 +26,6 @@ class Model:
 
     @torch.no_grad()
     def transform_image(self, image_batch: list):
-        '''
-        Transforms a batch of images to tensors using CLIP's preprocess.
-
-        Args:
-            image_batch (list): List of numpy arrays (frames).
-
-        Returns:
-            torch.Tensor: Batched tensor of transformed images.
-        '''
         # Convert each frame from numpy to PIL, preprocess, and stack into batch
         tf_images = [self.preprocess(Image.fromarray(image).convert('RGB')).unsqueeze(0).to(self.device)
                      for image in image_batch]
@@ -65,20 +54,6 @@ class Model:
 
     @torch.no_grad()
     def predict_batch(self, image_batch: list) -> list:
-        '''
-        Does prediction on a batch of images.
-
-        Args:
-            image_batch (list): List of numpy image arrays with RGB channel
-                                ordering.
-
-        Returns:
-            (list): List of dictionaries, each containing predictions:
-                    {
-                    'label': 'some_label',
-                    'confidence': 0.X
-                    }
-        '''
         # Transform the batch of images
         tf_images = self.transform_image(image_batch)
         
@@ -88,8 +63,7 @@ class Model:
         # Predict labels for the batch
         predictions = []
         for image_feature in image_features:
-            values, indices = self.predict_(text_features=self.text_features,
-                                            image_features=image_feature.unsqueeze(0))
+            values, indices = self.predict_(text_features=self.text_features, image_features=image_feature.unsqueeze(0))
             label_index = indices[0].cpu().item()
             label_text = self.default_label
             model_confidence = abs(values[0].cpu().item())
@@ -106,19 +80,6 @@ class Model:
 
     @torch.no_grad()
     def predict(self, image: np.array) -> dict:
-        '''
-        Makes a prediction for a single image.
-
-        Args:
-            image (np.array): Input image in numpy format.
-
-        Returns:
-            dict: Dictionary containing:
-                  {
-                      'label': 'predicted_label',
-                      'confidence': confidence_score
-                  }
-        '''
         # Transform the image to tensor
         tf_image = self.transform_image([image])  # Transform single image into a batch of size 1
 

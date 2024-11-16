@@ -43,9 +43,7 @@ def detect_human (net, ln, frame, encoder, tracker, time):
 				boxes.append([x, y, int(width), int(height)])
 				centroids.append((center_x, center_y))
 				confidences.append(float(confidence))
-	# Perform Non-maxima suppression to suppress weak and overlapping boxes
-	# It will filter out unnecessary boxes, i.e. box within box
-	# Output will be indexs of useful boxes
+	
 	idxs = cv2.dnn.NMSBoxes(boxes, confidences, MIN_CONF, NMS_THRESH)
 
 	tracked_bboxes = []

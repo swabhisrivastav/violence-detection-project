@@ -17,13 +17,7 @@ if os.path.exists(log_filename):
 # Configure logging with the same filename (it will create a new one)
 logging.basicConfig(filename=log_filename, level=logging.INFO, format='%(asctime)s - %(message)s')
 
-# Settings for violence detection alert
-# adjust threshold and time window as per batch size
-#deon
-# DETECTION_THRESHOLD = 50  # Number of detections
-# TIME_WINDOW = 3  # Time window in seconds
-# ALERT_COOLDOWN = 10  # Cooldown period in seconds before another alert is allowed
-# BATCH_SIZE = 9 
+ 
 DETECTION_THRESHOLD = 40  # Number of detections
 TIME_WINDOW = 3  # Time window in seconds
 ALERT_COOLDOWN = 10  # Cooldown period in seconds before another alert is allowed

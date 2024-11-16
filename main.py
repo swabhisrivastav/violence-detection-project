@@ -96,8 +96,6 @@ def process_crowd_real_time(webcam_index, frame_size, net, ln, encoder, tracker,
             bbox = track.to_tlbr()  # Bounding box in top-left, bottom-right format
             human_count += 1
             cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (0, 255, 0), 2)
-            # cv2.putText(frame, f"ID {track.track_id}", (int(bbox[0]), int(bbox[1]) - 10),
-            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
         # Display human count on the frame
         cv2.putText(frame, f"Human Count: {human_count}", (10, 30),

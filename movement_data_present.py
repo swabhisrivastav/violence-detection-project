@@ -45,9 +45,6 @@ color_end = 0
 color_steps = int((color_start - color_end) / blob_layer)
 scale = 1.5
 
-# print(stationary_distance)
-# print(stationary_threshold_frame)
-
 stationary_points = []
 movement_points = []
 total = 0
@@ -66,9 +63,6 @@ for movement in tracks:
             stationary_time = 0
     movement_points.append(temp_movement_point)
     total += len(temp_movement_point)
-
-# print(total)
-# print(movement_points)
 
 color1 = (255, 96, 0)
 color2 = (0, 28, 255)
