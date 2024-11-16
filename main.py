@@ -21,6 +21,105 @@ from deep_sort.detection import Detection
 from deep_sort.tracker import Tracker
 from deep_sort import generate_detections as gdet
 
+def process_crowd_real_time(webcam_index, frame_size, net, ln, encoder, tracker, crowd_data_writer):
+    print("Starting real-time crowd detection...")
+    cap = cv2.VideoCapture(webcam_index)
+
+    if not cap.isOpened():
+        print("Error: Cannot access the webcam")
+        return
+
+    frame_count = 0  # Track the number of frames processed
+
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            print("Error: Cannot read the frame from the webcam")
+            break
+
+        # Resize the frame
+        frame = imutils.resize(frame, width=frame_size)
+
+        # Convert the frame to a blob for YOLO processing
+        blob = cv2.dnn.blobFromImage(frame, 1 / 255.0, (frame_size, frame_size), swapRB=True, crop=False)
+        net.setInput(blob)
+        layer_outputs = net.forward(ln)
+
+        # Parse the YOLO output
+        boxes, confidences, class_ids = [], [], []
+        for output in layer_outputs:
+            for detection in output:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+
+                # Only consider people (class_id = 0 in COCO dataset)
+                if confidence > 0.5 and class_id == 0:
+                    box = detection[0:4] * np.array([frame.shape[1], frame.shape[0], frame.shape[1], frame.shape[0]])
+                    (center_x, center_y, width, height) = box.astype("int")
+                    x = int(center_x - (width / 2))
+                    y = int(center_y - (height / 2))
+                    boxes.append([x, y, int(width), int(height)])
+                    confidences.append(float(confidence))
+                    class_ids.append(class_id)
+
+        # Apply Non-Maximum Suppression to filter overlapping boxes
+        indices = cv2.dnn.NMSBoxes(boxes, confidences, score_threshold=0.5, nms_threshold=0.4)
+
+        detections = []
+        if len(indices) > 0:
+            boxes_for_encoding = [boxes[i] for i in indices.flatten()]
+            features = encoder(frame, boxes_for_encoding)  # Generate features for detected boxes
+
+            for i, box in enumerate(boxes_for_encoding):
+                x, y, w, h = box
+                centroid_x = x + w / 2  # Compute centroid x
+                centroid_y = y + h / 2  # Compute centroid y
+                detections.append(
+                    Detection(
+                        tlwh=[x, y, w, h],  # Bounding box as [top-left x, top-left y, width, height]
+                        confidence=confidences[indices.flatten()[i]],
+                        feature=features[i],  # Pass the feature vector
+                        centroid=[centroid_x, centroid_y]  # Pass the centroid
+                    )
+                )
+
+        # Update the tracker (provide the current frame count as the time argument)
+        tracker.predict()
+        tracker.update(detections, time=frame_count)
+
+        # Draw bounding boxes and tracker IDs on the frame
+        human_count = 0
+        for track in tracker.tracks:
+            if not track.is_confirmed() or track.time_since_update > 1:
+                continue
+            bbox = track.to_tlbr()  # Bounding box in top-left, bottom-right format
+            human_count += 1
+            cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (0, 255, 0), 2)
+            # cv2.putText(frame, f"ID {track.track_id}", (int(bbox[0]), int(bbox[1]) - 10),
+            #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+        # Display human count on the frame
+        cv2.putText(frame, f"Human Count: {human_count}", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
+
+        # Log data to the CSV file
+        current_time = datetime.datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
+        crowd_data_writer.writerow([current_time, human_count, 0, 0, ""])
+
+        # Display the processed frame
+        cv2.imshow("Real-Time Crowd Detection", frame)
+
+        # Break the loop on 'q' key press
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+        frame_count += 1  # Increment the frame count
+
+    cap.release()
+    cv2.destroyAllWindows()
+    print("Real-time crowd detection ended.")
+    
 # Read from video
 IS_CAM = VIDEO_CONFIG["IS_CAM"]
 cap = cv2.VideoCapture(VIDEO_CONFIG["VIDEO_CAP"])
@@ -76,7 +175,16 @@ if os.path.getsize('processed_data/crowd_data.csv') == 0:
 
 START_TIME = time.time()
 
-processing_FPS = video_process(cap, FRAME_SIZE, net, ln, encoder, tracker, movement_data_writer, crowd_data_writer)
+# processing_FPS = video_process(cap, FRAME_SIZE, net, ln, encoder, tracker, movement_data_writer, crowd_data_writer)
+processing_FPS = process_crowd_real_time(
+    webcam_index=0,  # Use 0 for the default webcam
+    frame_size=FRAME_SIZE,
+    net=net,
+    ln=ln,
+    encoder=encoder,
+    tracker=tracker,
+    crowd_data_writer=crowd_data_writer
+)
 cv2.destroyAllWindows()
 movement_data_file.close()
 crowd_data_file.close()
