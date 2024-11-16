@@ -1,38 +1,11 @@
-2024-10-25 18:11:16,252 - 2024-10-25 18:11:16 - Detected label: people walking in office
-2024-10-25 18:11:17,121 - 2024-10-25 18:11:17 - Detected label: office corridor
-2024-10-25 18:11:17,890 - 2024-10-25 18:11:17 - Detected label: office corridor
-2024-10-25 18:11:18,661 - 2024-10-25 18:11:18 - Detected label: office corridor
-2024-10-25 18:11:19,430 - 2024-10-25 18:11:19 - Detected label: office corridor
-2024-10-25 18:11:20,175 - 2024-10-25 18:11:20 - Detected label: office corridor
-2024-10-25 18:11:20,988 - 2024-10-25 18:11:20 - Detected label: office corridor
-2024-10-25 18:11:21,776 - 2024-10-25 18:11:21 - Detected label: office corridor
-2024-10-25 18:11:22,544 - 2024-10-25 18:11:22 - Detected label: office corridor
-2024-10-25 18:11:23,301 - 2024-10-25 18:11:23 - Detected label: office corridor
-2024-10-25 18:11:24,061 - 2024-10-25 18:11:24 - Detected label: office corridor
-2024-10-25 18:11:24,803 - 2024-10-25 18:11:24 - Detected label: office corridor
-2024-10-25 18:11:25,565 - 2024-10-25 18:11:25 - Detected label: office corridor
-2024-10-25 18:11:26,332 - 2024-10-25 18:11:26 - Detected label: office corridor
-2024-10-25 18:11:27,107 - 2024-10-25 18:11:27 - Detected label: office corridor
-2024-10-25 18:11:27,877 - 2024-10-25 18:11:27 - Detected label: office corridor
-2024-10-25 18:11:28,653 - 2024-10-25 18:11:28 - Detected label: office corridor
-2024-10-25 18:11:29,447 - 2024-10-25 18:11:29 - Detected label: people walking in office
-2024-10-25 18:11:30,223 - 2024-10-25 18:11:30 - Detected label: people walking in office
-2024-10-25 18:11:30,970 - 2024-10-25 18:11:30 - Detected label: person standing
-2024-10-25 18:11:31,772 - 2024-10-25 18:11:31 - Detected label: person standing
-2024-10-25 18:11:32,526 - 2024-10-25 18:11:32 - Detected label: person standing
-2024-10-25 18:11:33,306 - 2024-10-25 18:11:33 - Detected label: person standing
-2024-10-25 18:11:34,079 - 2024-10-25 18:11:34 - Detected label: violence in office
-2024-10-25 18:11:34,877 - 2024-10-25 18:11:34 - Detected label: violence in office
-2024-10-25 18:11:35,678 - 2024-10-25 18:11:35 - Detected label: violence in office
-2024-10-25 18:11:36,465 - 2024-10-25 18:11:36 - Detected label: violence in office
-2024-10-25 18:11:37,265 - 2024-10-25 18:11:37 - Detected label: violence in office
-2024-10-25 18:11:38,036 - 2024-10-25 18:11:38 - Detected label: violence in office
-2024-10-25 18:11:38,819 - 2024-10-25 18:11:38 - Detected label: violence in office
-2024-10-25 18:11:39,589 - 2024-10-25 18:11:39 - Detected label: violence in office
-2024-10-25 18:11:40,327 - 2024-10-25 18:11:40 - Detected label: violence in office
-2024-10-25 18:11:41,109 - 2024-10-25 18:11:41 - Detected label: violence in office
-2024-10-25 18:11:41,895 - 2024-10-25 18:11:41 - Detected label: violence in office
-2024-10-25 18:11:42,687 - 2024-10-25 18:11:42 - Detected label: violence in office
-2024-10-25 18:11:43,461 - 2024-10-25 18:11:43 - Detected label: violence in office
-2024-10-25 18:11:44,250 - 2024-10-25 18:11:44 - Detected label: violence in office
-2024-10-25 18:11:45,017 - 2024-10-25 18:11:45 - Detected label: violence in office
+2024-11-16 15:46:07,234 - From c:\Users\swabhi\Downloads\violence-detection-project\deep_sort\generate_detections.py:79: The name tf.Session is deprecated. Please use tf.compat.v1.Session instead.
+
+2024-11-16 15:46:07,318 - From c:\Users\swabhi\Downloads\violence-detection-project\deep_sort\generate_detections.py:85: The name tf.get_default_graph is deprecated. Please use tf.compat.v1.get_default_graph instead.
+
+2024-11-16 15:46:22,649 - 
+2024-11-16 15:46:23,297 - 
+2024-11-16 15:46:24,414 - person sitting
+2024-11-16 15:46:24,952 - person sitting
+2024-11-16 15:46:25,811 - person sitting
+2024-11-16 15:46:26,372 - person sitting
+2024-11-16 15:46:27,277 - person standing
