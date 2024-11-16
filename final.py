@@ -107,6 +107,7 @@ def detect_violence(model, frames, detection_times, last_alert_time):
         label_to_log = label  # Always log the label
         if 'violence' in label.lower():
             detection_times.append(current_time)
+            last_alert_time = check_for_alert(detection_times, last_alert_time)
             # Trigger alert if conditions are met
             if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
                 logging.info("Alert: Violence detected!")
