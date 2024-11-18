@@ -18,7 +18,7 @@ class Model:
         self.labels = self.settings['label-settings']['labels']
         self.labels_ = []
         for label in self.labels:
-            text = 'a photo of ' + label  # will increase model's accuracy
+            text = 'a photo of ' + label  
             self.labels_.append(text)
 
         self.text_features = self.vectorize_text(self.labels_)
@@ -27,8 +27,7 @@ class Model:
     @torch.no_grad()
     def transform_image(self, image_batch: list):
         # Convert each frame from numpy to PIL, preprocess, and stack into batch
-        tf_images = [self.preprocess(Image.fromarray(image).convert('RGB')).unsqueeze(0).to(self.device)
-                     for image in image_batch]
+        tf_images = [self.preprocess(Image.fromarray(image).convert('RGB')).unsqueeze(0).to(self.device)for image in image_batch]
         return torch.cat(tf_images)  # Stack all tensors along batch dimension
 
     @torch.no_grad()
@@ -43,8 +42,7 @@ class Model:
         return text_features
 
     @torch.no_grad()
-    def predict_(self, text_features: torch.Tensor,
-                 image_features: torch.Tensor):
+    def predict_(self, text_features: torch.Tensor,image_features: torch.Tensor):
         # Pick the top most similar label for each image in the batch
         image_features /= image_features.norm(dim=-1, keepdim=True)
         text_features /= text_features.norm(dim=-1, keepdim=True)
@@ -113,64 +111,60 @@ class Model:
         if len(image.shape) == 3:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         plt.imshow(image)
-
-
+        
 # Code for video capture and batch processing
-def process_video_batch(model, video_source=0, batch_size=4):
-    cap = cv2.VideoCapture(video_source)  # 0 for webcam, or replace with video file path
+def process_video_batch(model, video_source=0, batch_size=4, output_path=None):
+    cap = cv2.VideoCapture(video_source)  
     frame_batch = []
+    frame_index = 0
+
+    # Prepare output video writer if needed
+    out = None
+    if output_path:
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # Codec for output video
+        fps = cap.get(cv2.CAP_PROP_FPS)
+        width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+        height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+        out = cv2.VideoWriter(output_path, fourcc, fps, (width, height))
 
     while True:
         ret, frame = cap.read()
 
         if not ret:
             break
-
         # Convert the frame to RGB if using OpenCV
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-
-        # Add the frame to the batch
         frame_batch.append(frame)
 
-        # Check if we have enough frames for a batch
         if len(frame_batch) == batch_size:
             # Process the batch of frames
             predictions = model.predict_batch(frame_batch)
             
-            for idx, prediction in enumerate(predictions):
-                print(f"Frame {idx+1}: {prediction}")
-            
-            # Clear the batch
+            for i, prediction in enumerate(predictions):
+                frame_index += 1
+                print(f"Frame {frame_index}: {prediction}")
+
+                annotated_frame = cv2.putText(cv2.cvtColor(frame_batch[i], cv2.COLOR_RGB2BGR),
+                f"{prediction['label']} ({prediction['confidence']:.2f})",(10, 30),cv2.FONT_HERSHEY_SIMPLEX,1,(0, 255, 0),2,cv2.LINE_AA)
+
+                if out:
+                    out.write(annotated_frame)
+
+                cv2.imshow("Video", annotated_frame)
+
             frame_batch = []
 
-        # Optionally display the frame (processed frame in RGB)
-        cv2.imshow("Webcam", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
-
-        # Break the loop if 'q' is pressed
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
-    # Release the video capture object and close windows
     cap.release()
+    if out:
+        out.release()
     cv2.destroyAllWindows()
 
-
-# Example usage for single image processing:
-def process_image(model, image_path):
-    image = cv2.imread(image_path)
-    if image is None:
-        print(f"Error: Could not read image from {image_path}")
-        return
-    prediction = model.predict(image=image)  # Using the predict method for a single image
-    print(f'Predicted label for image: {prediction["label"]}, Confidence: {prediction["confidence"]}')
-
-
-# Example usage:
 if __name__ == "__main__":
-    # Initialize model
     model = Model()
 
-    # Process video or webcam feed in batches
-    process_video_batch(model, video_source=0, batch_size=4)
-
-   
+    # video_file = "./data/office_fight.mp4"  
+    video_file = 0 #webcam
+    process_video_batch(model, video_source=video_file, batch_size=4, output_path=None)

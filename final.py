@@ -14,7 +14,6 @@ from deep_sort.tracker import Tracker
 from deep_sort import generate_detections as gdet
 from model import Model  
 
-# Initialize logging
 log_filename = 'detection_log.txt'
 if os.path.exists(log_filename):
     os.remove(log_filename)
@@ -30,14 +29,18 @@ violence_handler.setFormatter(logging.Formatter('%(asctime)s - %(message)s'))
 violence_logging.addHandler(violence_handler)
 
 # Function to log violence detection events
-def log_violence_detection(label_to_display):
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    violence_logging.info(f'{timestamp} - Violence Detected: {label_to_display}')
+def log_violence_detection(label_to_display,last_log_time):
+    current_time = time.time()
+    if current_time - last_log_time >= 1.2:  
+        violence_logging.info(f"detected:{label_to_display}")
+        last_log_time = current_time
+    #timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    #violence_logging.info(f'{timestamp} - Violence Detected: {label_to_display}')
 
 # Constants for violence detection
-DETECTION_THRESHOLD = 40
+DETECTION_THRESHOLD = 10
 TIME_WINDOW = 3
-ALERT_COOLDOWN = 10
+ALERT_COOLDOWN = 5
 BATCH_SIZE = 9
 MOTION_THRESHOLD = 500
 
@@ -73,10 +76,10 @@ crowd_data_writer = csv.writer(crowd_data_file)
 if os.path.getsize('processed_data/crowd_data.csv') == 0:
     crowd_data_writer.writerow(['Time', 'Human Count', 'Violence Alert'])
 
-def log_label(label):
-    """Log the detected label with the current timestamp."""
-    timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    logging.info(f'{timestamp} - Detected label: {label}')
+# def log_label(label):
+#     """Log the detected label with the current timestamp."""
+#     timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+#     logging.info(f'{timestamp} - Detected label: {label}')
 
 def check_for_alert(detection_times, last_alert_time):
     current_time = time.time()
@@ -91,36 +94,57 @@ def check_for_alert(detection_times, last_alert_time):
         if current_time - last_alert_time >= ALERT_COOLDOWN:
             print("Alert: Violence detected!")
             logging.info("Alert: Violence detected!")
-            return current_time  # Update last_alert_time
+            return current_time  
     
     return last_alert_time
 
-# Function to detect violence
-def detect_violence(model, frames, detection_times, last_alert_time):
+def alerts(model, frames, detection_times, last_alert_time,last_log_time):
     labels = model.predict_batch(frames)
     current_time = time.time()
     label_to_display = ""
     label_to_log = ""
+    
     for label_dict in labels:
         label = label_dict['label']
-        label_to_log = label  # Always log the label
-        if 'violence' in label.lower():
+        label_to_log = label  
+        if 'violence' or 'fight' in label.lower():
             detection_times.append(current_time)
             last_alert_time = check_for_alert(detection_times, last_alert_time)
-            # Trigger alert if conditions are met
             if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
                 logging.info("Alert: Violence detected!")
                 last_alert_time = current_time
             label_to_display = label 
-            log_violence_detection(label_to_display)
-             # Update the label to display when violence is detected
+            log_violence_detection(label_to_display,last_log_time)
+        elif 'fire' in label.lower():
+            detection_times.append(current_time)
+            last_alert_time = check_for_alert(detection_times, last_alert_time)
+            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
+                logging.info("Alert: Fire detected!")
+                last_alert_time = current_time
+            label_to_display = label 
+            log_violence_detection(label_to_display,last_log_time)
+        elif 'crash' in label.lower():
+            detection_times.append(current_time)
+            last_alert_time = check_for_alert(detection_times, last_alert_time)
+            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
+                logging.info("Alert: Crash detected!")
+                last_alert_time = current_time
+            label_to_display = label 
+            log_violence_detection(label_to_display,last_log_time)
+        elif 'gun' or 'knife' in label.lower():
+            detection_times.append(current_time)
+            last_alert_time = check_for_alert(detection_times, last_alert_time)
+            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
+                logging.info("Alert: Weapon detected!")
+                last_alert_time = current_time
+            label_to_display = label 
+            log_violence_detection(label_to_display,last_log_time)
         else:
             detection_times.clear()
 
     return label_to_display, label_to_log, last_alert_time
 
 
-# Real-time processing for crowd and violence detection
 def process_real_time():
     print("Starting real-time processing...")
     cap = cv2.VideoCapture(0)
@@ -132,7 +156,7 @@ def process_real_time():
     cv2.namedWindow(window_name, cv2.WINDOW_NORMAL) 
     cv2.resizeWindow(window_name, 1080, 720)  
 
-    model = Model()  # Initialize violence detection model
+    model = Model()  
     detection_times = deque()
     last_alert_time = 0
     frame_batch = []
@@ -193,29 +217,24 @@ def process_real_time():
                 cv2.rectangle(frame, (int(bbox[0]), int(bbox[1])), (int(bbox[2]), int(bbox[3])), (0, 255, 0), 2)
 
         # Batch violence detection
-                # Batch violence detection
         frame_batch.append(frame)
         if len(frame_batch) == BATCH_SIZE:
-            label_to_display, label_to_log, last_alert_time = detect_violence(model, frame_batch, detection_times, last_alert_time)
+            label_to_display, label_to_log, last_alert_time = alerts(model, frame_batch, detection_times, last_alert_time,last_log_time)
             frame_batch = []
 
         # Log detection periodically
         current_time = time.time()
-        if current_time - last_log_time >= 0.5:  # Log every 0.5 seconds
+        if current_time - last_log_time >= 0.5:  
             logging.info(f"{label_to_log}")
             last_log_time = current_time
 
-        # Display crowd count and violence detection status
         cv2.putText(frame, f"Human Count: {human_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
-        if label_to_display:  # Only display when violence is detected
+        if label_to_display:  
             cv2.putText(frame, f"Label: {label_to_display}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
-
-        # Log only human count to CSV
         current_time_str = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
         crowd_data_writer.writerow([current_time_str, human_count])
 
-        # Display the frame
         cv2.imshow("Crowd and Violence Detection", frame)
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
@@ -227,7 +246,6 @@ def process_real_time():
     cv2.destroyAllWindows()
     print("Real-time processing ended.")
 
-# Run the integrated program
 if __name__ == "__main__":
     process_real_time()
     crowd_data_file.close()

@@ -3,7 +3,7 @@ model-settings:
   model-name: 'ViT-B/32'
   device: 'cpu'
 label-settings:
-  labels: # labels that can be predicted if model's confidence is more than "prediction-threshold"
+  labels: 
     # outdoor cases
     - 'people walking on a street'
     - 'buildings'
@@ -12,6 +12,8 @@ label-settings:
     - 'car on fire'
     - 'street violence'
     - 'road'
+    - 'gun'
+    - 'knife'
     - 'car crash'
     - 'cars on a road'
     - 'car parking area'
@@ -21,6 +23,8 @@ label-settings:
     - 'office corridor'
     - 'violence in office'
     - 'fire in office'
+    - 'gun'
+    - 'knife'
     - 'people talking'
     - 'people walking in office'
     - 'person sitting in office'
@@ -31,5 +35,5 @@ label-settings:
     - 'person standing'
     - 'person sitting'
     - 'group of people'
-  default-label: 'Unknown' # value to return if model's confidence is less than "prediction-threshold"
+  default-label: 'Unknown' 
 
