@@ -9,10 +9,32 @@ import logging
 from twilio.rest import Client  
 from dotenv import load_dotenv
 import os
+from collections import deque
+import time
 
-load_dotenv() 
+load_dotenv()
 
-# Initialize the logger
+TIME_WINDOW = 3 
+DETECTION_THRESHOLD = 10  
+ALERT_COOLDOWN = 10  
+
+detection_times = deque()
+last_alert_time = 0
+
+def check_for_alert(detection_times, last_alert_time,label):
+    current_time = time.time()
+    
+    while detection_times and current_time - detection_times[0] > TIME_WINDOW:
+        detection_times.popleft()
+
+    if len(detection_times) >= DETECTION_THRESHOLD:
+        if current_time - last_alert_time >= ALERT_COOLDOWN:
+            print(f"Alert: {label} detected!")
+            logger.info(f"Alert: {label} detected!")
+            return current_time  
+    
+    return last_alert_time
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -32,11 +54,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load the model
 model = Model()
 
 @app.post("/predict/")
 async def predict_image(file: UploadFile = File(...)):
+    last_alert_time = 0
+    current_time = time.time()
+    label_to_display = ""
     logger.info("Received a file for prediction.")
     
     # Log file details
@@ -48,16 +72,24 @@ async def predict_image(file: UploadFile = File(...)):
 
     logger.info(f"Image shape: {image_np.shape}")
 
-    # Make a prediction using your existing model
-    label = model.predict(image=image_np)['label'].title()
+    labels = model.predict(image=image_np)['label'].title()
+    for label_dict in labels:
+        label = label_dict['label'].lower()
 
-    logger.info(f"Predicted label: {label}")
+        if any(keyword in label for keyword in ['violence', 'fight', 'fire', 'crash']):
+            detection_times.append(current_time)
+            last_alert_time = check_for_alert(detection_times, last_alert_time)
+            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
+                logger.info(f"Predicted label: {label}")
+                last_alert_time = current_time
+            label_to_display = label.capitalize()  
+        else:
+            detection_times.clear()
 
-    # Trigger Twilio alert based on the prediction
+
     alert_message = ""
-    if label in ['fight on a street','fire on a street','street violence','Car Crash','violence in office','fire in office']:
-        # Set the alert message based on the predicted label
-        alert_message = f"{label} alert triggered!"
+    if label_to_display in ['fight on a street','fire on a street','street violence','Car Crash','violence in office','fire in office']:
+        alert_message = f"{label_to_display} alert triggered!"
         
         try:
             message = client.messages.create(
@@ -70,4 +102,4 @@ async def predict_image(file: UploadFile = File(...)):
             logger.error(f"Failed to send Twilio message: {e}")
             raise HTTPException(status_code=500, detail="Failed to send alert")
 
-    return {"predicted_label": label, "alert_message": alert_message}
+    return {"predicted_label": label_to_display, "alert_message": alert_message}
