@@ -31,16 +31,17 @@ violence_logging.addHandler(violence_handler)
 # Function to log violence detection events
 def log_violence_detection(label_to_display,last_log_time):
     current_time = time.time()
-    if current_time - last_log_time >= 1.2:  
+    if current_time - last_log_time >= 1:  
         violence_logging.info(f"detected:{label_to_display}")
         last_log_time = current_time
+    return last_log_time
     #timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     #violence_logging.info(f'{timestamp} - Violence Detected: {label_to_display}')
 
 # Constants for violence detection
 DETECTION_THRESHOLD = 10
 TIME_WINDOW = 3
-ALERT_COOLDOWN = 5
+ALERT_COOLDOWN = 10
 BATCH_SIZE = 9
 MOTION_THRESHOLD = 500
 
@@ -93,52 +94,29 @@ def check_for_alert(detection_times, last_alert_time):
         # Trigger alert only if ALERT_COOLDOWN has passed since the last alert
         if current_time - last_alert_time >= ALERT_COOLDOWN:
             print("Alert: Violence detected!")
-            logging.info("Alert: Violence detected!")
+            violence_logging.info("Alert: Violence detected!")
             return current_time  
     
     return last_alert_time
 
-def alerts(model, frames, detection_times, last_alert_time,last_log_time):
+def alerts(model, frames, detection_times, last_alert_time, last_log_time):
     labels = model.predict_batch(frames)
     current_time = time.time()
     label_to_display = ""
     label_to_log = ""
-    
+
     for label_dict in labels:
-        label = label_dict['label']
-        label_to_log = label  
-        if 'violence' or 'fight' in label.lower():
+        label = label_dict['label'].lower()
+        label_to_log = label
+
+        if any(keyword in label for keyword in ['violence', 'fight', 'fire', 'crash']):
             detection_times.append(current_time)
             last_alert_time = check_for_alert(detection_times, last_alert_time)
             if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
-                logging.info("Alert: Violence detected!")
+                violence_logging.info(f"Alert: {label.capitalize()} detected!")
                 last_alert_time = current_time
-            label_to_display = label 
-            log_violence_detection(label_to_display,last_log_time)
-        elif 'fire' in label.lower():
-            detection_times.append(current_time)
-            last_alert_time = check_for_alert(detection_times, last_alert_time)
-            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
-                logging.info("Alert: Fire detected!")
-                last_alert_time = current_time
-            label_to_display = label 
-            log_violence_detection(label_to_display,last_log_time)
-        elif 'crash' in label.lower():
-            detection_times.append(current_time)
-            last_alert_time = check_for_alert(detection_times, last_alert_time)
-            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
-                logging.info("Alert: Crash detected!")
-                last_alert_time = current_time
-            label_to_display = label 
-            log_violence_detection(label_to_display,last_log_time)
-        elif 'gun' or 'knife' in label.lower():
-            detection_times.append(current_time)
-            last_alert_time = check_for_alert(detection_times, last_alert_time)
-            if len(detection_times) >= DETECTION_THRESHOLD and current_time - last_alert_time >= ALERT_COOLDOWN:
-                logging.info("Alert: Weapon detected!")
-                last_alert_time = current_time
-            label_to_display = label 
-            log_violence_detection(label_to_display,last_log_time)
+            label_to_display = label.capitalize()  # Update display variable
+            last_log_time = log_violence_detection(label_to_display, last_log_time)
         else:
             detection_times.clear()
 
@@ -152,9 +130,9 @@ def process_real_time():
         print("Error: Cannot access the webcam")
         return
     
-    window_name = "Crowd and Violence Detection"
-    cv2.namedWindow(window_name, cv2.WINDOW_NORMAL) 
-    cv2.resizeWindow(window_name, 1080, 720)  
+    #window_name = "Crowd and Violence Detection"
+    #cv2.namedWindow(window_name, cv2.WINDOW_NORMAL) 
+    #cv2.resizeWindow(window_name, 1080, 720)  
 
     model = Model()  
     detection_times = deque()
@@ -230,7 +208,7 @@ def process_real_time():
 
         cv2.putText(frame, f"Human Count: {human_count}", (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 255), 2)
         if label_to_display:  
-            cv2.putText(frame, f"Label: {label_to_display}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+            cv2.putText(frame, f"{label_to_display}", (10, 60), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
 
         current_time_str = datetime.now().strftime("%d/%m/%Y, %H:%M:%S")
         crowd_data_writer.writerow([current_time_str, human_count])
